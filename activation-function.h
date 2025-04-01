@@ -1,33 +1,42 @@
 #pragma once
 
 #include "types.h"
-#include <functional>
+#include "boost/te.h"
 
-using f_RR = std::function<double(double)>;
+namespace te = boost::te;
 
-template<int M, int N>
-class ActivationFunction {
-    f_RR sigma;
-    f_RR dsigma;
-
-public:
-    ActivationFunction(const f_RR& sigma_, const f_RR& dsigma_) : sigma(sigma_), dsigma(dsigma_) {};
-
-    double operator()(double x) const {
-        return sigma(x);
-    }
-    col<N> apply(const col<N>& x) const {
-        col<N> res = x;
-        for (int i = 0; i < N; ++i) {
-            res(i, 0) = sigma(res(i, 0));
+namespace NNFS {
+    struct IActFun {
+        Vector apply(const Vector& x) const {
+            return te::call<Vector>(apply_impl, *this, x);
         }
-        return res;
-    }
-    col<N> apply_der(const col<N>& x) const {
-        col<N> res = x;
-        for (int i = 0; i < N; ++i) {
-            res(i, 0) = dsigma(res(i, 0));
+        Matrix get_jac(const Vector& x) const {
+            return te::call<Matrix>(get_jac_impl, *this, x);
         }
-        return res;
-    }
-};
+    private:
+        static constexpr auto apply_impl = [](auto &self, const auto& x) {
+            return self.apply(x);
+        };
+        static constexpr auto get_jac_impl = [](auto &self, const auto& x) {
+            return self.get_jac(x);
+        };
+    };
+    using ActivationFunction = te::poly<IActFun>;
+
+
+    class ReLU {
+    public:
+        Vector apply(const Vector& x) const;
+        Matrix get_jac(const Vector& x) const;
+    };
+    class Sigmoid {
+    public:
+        Vector apply(const Vector& x) const;
+        Matrix get_jac(const Vector& x) const;
+    };
+    class Softmax {
+    public:
+        Vector apply(const Vector& x) const;
+        Matrix get_jac(const Vector& x) const;
+    };
+}

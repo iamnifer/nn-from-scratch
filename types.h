@@ -1,12 +1,14 @@
 #pragma once
+#include <eigen/Eigen/Dense>
 
-#include <Eigen/Dense>
-
-template<int N, int M>
-using matrix = Eigen::Matrix<double, N, M>;
-
-template<int N>
-using col = Eigen::Matrix<double, N, 1>;
-
-template<int M>
-using row = Eigen::Matrix<double, 1, M>;
+namespace NNFS {
+    using Matrix = Eigen::MatrixXd;
+    using Vector = Eigen::VectorXd;
+    using RowVector = Eigen::RowVectorXd;
+    using VectorSet = std::vector<Vector>;
+    using FType = double;
+    struct Sample {
+        Vector x, y;
+    };
+    using Dataset = std::vector<Sample>;
+}
