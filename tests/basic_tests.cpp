@@ -14,7 +14,6 @@ TEST(BasicTests, Ax_plus_b) {
         return f_A * x + f_b;
     };
     auto dataset = rng.GenDataset(dataset_size, x_dim, f);
-
     auto [train, test] = TrainTestSplit(dataset);
 
     NeuralNetwork nn = std::vector<Layer>{LinearLayer(2, 2)};
@@ -44,7 +43,6 @@ TEST(BasicTests, sin) {
         return x.array().sin();
     };
     auto dataset = rng.GenDataset(dataset_size, x_dim, f);
-
     auto [train, test] = TrainTestSplit(dataset);
 
     NeuralNetwork nn = std::vector<Layer>{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "activation-function.h"
-#include "boost/te.h"
+#include "boost-ext/te.h"
 #include "optimizer.h"
 #include "random.h"
 #include "types.h"
